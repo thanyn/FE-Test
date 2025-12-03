@@ -1,5 +1,4 @@
-import AppLayout from "../component/AppLayout";
-
+import AppLayout from '../component/AppLayout';
 
 export default function AboutUs() {
   return (
