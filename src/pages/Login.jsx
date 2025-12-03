@@ -1,12 +1,12 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Form, Input, Button, Card, Typography, Alert } from "antd";
 import { useNavigate } from "react-router-dom";
+import bcrypt from "bcryptjs";
 
 const { Title } = Typography;
 
 export default function Login() {
   const navigate = useNavigate();
-  const [isModalSuccess, setIsModalSuccess] = useState(false);
   const [isAlert, setAlert] = useState(false);
 
   const onFinish = (values) => {
@@ -14,12 +14,12 @@ export default function Login() {
     const users = JSON.parse(localStorage.getItem("users")) || [];
 
     const user = users.find(
-      (user) => user.email === email && user.password === password
+      (user) => user.email === email
     );
-
-    if (user) {
-      localStorage.setItem("token", email);
-      setIsModalSuccess(true)
+    
+    if (user && bcrypt.compareSync(password, user.password)) {
+      localStorage.setItem("token", user.email);
+      localStorage.setItem("user_login", JSON.stringify(user));
       navigate("/home");
     } else {
       setAlert(true)
@@ -79,17 +79,10 @@ export default function Login() {
           </Form.Item>
 
           <Form.Item>
-            <Button type="primary" htmlType="submit" block style={{ background: "#a8cde6" }}>
+            <Button type="primary" htmlType="submit" block style={{ background: "#0072c3" }}>
               Login
             </Button>
           </Form.Item>
-
-          <div style={{ height: 20, textAlign: "center" }}>
-            .
-          </div>
-          <div style={{ height: 20, textAlign: "center" }}>
-            .
-          </div>
 
           <Form.Item>
             <div style={{ display: "flex", justifyContent: "center" }} >

@@ -5,11 +5,11 @@ import './App.css';
 import Login from './pages/Login';
 import Home from "./pages/Home";
 import Register from "./pages/Register";
+import AboutUs from "./pages/AboutUs";
 
 function ProtectedRoute({ children }) {
-  const isLoggedIn = localStorage.getItem("token"); // หรือเช็ค state ที่คุณใช้
-
-  return isLoggedIn ? children : <Navigate to="/" replace />;
+  const isLogIn = localStorage.getItem("token");
+  return isLogIn ? children : <Navigate to="/" replace />;
 }
 
 function App() {
@@ -26,6 +26,14 @@ function App() {
           element={
             <ProtectedRoute>
               <Home />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/about-us"
+          element={
+            <ProtectedRoute>
+              <AboutUs />
             </ProtectedRoute>
           }
         />

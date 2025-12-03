@@ -1,12 +1,11 @@
-import React from "react";
 import AppLayout from "../component/AppLayout";
 
 
-export default function Home() {
+export default function AboutUs() {
   return (
     <AppLayout>
       <div>
-        <h3>Welcome Home</h3>
+        <h3>About Us</h3>
       </div>
     </AppLayout>
   );

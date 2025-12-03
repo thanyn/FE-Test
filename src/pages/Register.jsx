@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Form, Input, Button, Card, Typography } from "antd";
 import { useNavigate } from "react-router-dom";
 import ModalSuccess from "../component/ModalSuccess";
+import { CheckCircleFilled } from '@ant-design/icons';
+import bcrypt from "bcryptjs";
 
 const { Title } = Typography;
 
@@ -11,7 +13,7 @@ export default function Register() {
   const [isModalSuccess, setIsModalSuccess] = useState(false);
 
   const onFinish = (values) => {
-    const { username, email, password } = values;
+    const { name, last_name, email, password } = values;
 
     const users = JSON.parse(localStorage.getItem("users")) || [];
 
@@ -26,11 +28,17 @@ export default function Register() {
       return;
     }
 
-    users.push({ username, email, password });
+    const salt = bcrypt.genSaltSync(10);
+    const hashedPassword = bcrypt.hashSync(password, salt);
+    users.push({ name, last_name, email, password: hashedPassword });
     localStorage.setItem("users", JSON.stringify(users));
 
     setIsModalSuccess(true)
-    // window.location.href = "/";
+  };
+
+  const handleModalOk = () => {
+    setIsModalSuccess(false);
+    navigate("/");
   };
 
   return (
@@ -58,21 +66,31 @@ export default function Register() {
           onFinish={onFinish}
         >
           <Form.Item
-            label="Username"
-            name="username"
+            label="Name"
+            name="name"
             rules={[
-              { required: true, message: "กรุณากรอก username" },
+              { required: true, message: "Please enter name" },
             ]}
           >
-            <Input placeholder="Enter username" />
+            <Input placeholder="Enter name" />
+          </Form.Item>
+
+          <Form.Item
+            label="Last Name"
+            name="last_name"
+            rules={[
+              { required: true, message: "Please enter last name" },
+            ]}
+          >
+            <Input placeholder="Enter last name" />
           </Form.Item>
 
           <Form.Item
             label="Email"
             name="email"
             rules={[
-              { required: true, message: "กรุณากรอก email" },
-              { type: "email", message: "รูปแบบ email ไม่ถูกต้อง" },
+              { required: true, message: "Please enter email" },
+              { type: "email", message: "Invalid email format" },
             ]}
           >
             <Input placeholder="Enter email" />
@@ -82,8 +100,12 @@ export default function Register() {
             label="Password"
             name="password"
             rules={[
-              { required: true, message: "กรุณากรอก password" },
-              { min: 6, message: "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร" },
+              { required: true, message: "Please enter password" },
+              { min: 6, message: "Password must be at least 6 characters long" },
+              {
+                pattern: /[!@#$%^&*(),.?":{}_|<>+/-]/,
+                message: "Password must contain at least one special character",
+              }
             ]}
           >
             <Input.Password placeholder="Enter password" />
@@ -94,22 +116,22 @@ export default function Register() {
             name="confirm"
             dependencies={['password']}
             rules={[
-              { required: true, message: "กรุณายืนยัน password" },
+              { required: true, message: "Please confirm password" },
               ({ getFieldValue }) => ({
                 validator(_, value) {
                   if (!value || getFieldValue('password') === value) {
                     return Promise.resolve();
                   }
-                  return Promise.reject(new Error('รหัสผ่านไม่ตรงกัน'));
+                  return Promise.reject(new Error('Passwords do not match'));
                 },
               }),
             ]}
           >
-            <Input.Password placeholder="Confirm password" />
+            <Input.Password placeholder="Enter confirm password" />
           </Form.Item>
 
           <Form.Item>
-            <Button type="primary" htmlType="submit" block style={{ background: "#a8cde6" }}>
+            <Button type="primary" htmlType="submit" block style={{ background: "#0072c3" }}>
               Register
             </Button>
           </Form.Item>
@@ -124,7 +146,18 @@ export default function Register() {
         </div>
       </Card>
 
-      <ModalSuccess open={isModalSuccess} title={"Registration successful!"} onOk={() => navigate("/")} />
+      <ModalSuccess open={isModalSuccess}
+        title={
+          <span>
+            <CheckCircleFilled style={{ fontSize: 50, color: "#52c41a", marginBottom: 20 }} />
+            <Title level={4} style={{ marginBottom: 10 }}>
+              Registration Successful!
+            </Title>
+          </span>
+        }
+        content={<p>You have successfully registered! Please login to continue.</p>}
+        onOk={handleModalOk}
+        onCancel={handleModalOk} />
     </div>
   );
 }
