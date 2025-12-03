@@ -28,6 +28,19 @@
   color: #61dafb;
 }
 
+div.ant-form-item-explain-error {
+  font-size: 12px;
+}
+
+.card-bg {
+  background: #f0fbff;
+  background: linear-gradient(
+    90deg,
+    rgba(240, 251, 255, 1) 35%,
+    rgba(255, 255, 255, 1) 100%
+  );
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
