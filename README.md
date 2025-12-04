@@ -1,6 +1,6 @@
-# Getting Started with Create React App
-
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is a frontend project created with Create React App.  
+The purpose of this project is to implement essential authentication features including login, registration, logout, and protected pages.  
+It serves as a test or demo project for showcasing fundamental frontend architecture and user authentication flow.
 
 ## Available Scripts
 
